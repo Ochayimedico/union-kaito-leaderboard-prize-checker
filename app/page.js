@@ -71,6 +71,9 @@ export default function Home() {
           </p>
         </div>
       </div>
+      <p className="w-full mt-40 italic font-bold text-indigo-700 text-center">
+        made by @__medico_
+      </p>
     </div>
   );
 }
