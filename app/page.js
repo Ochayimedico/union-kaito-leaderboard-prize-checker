@@ -70,7 +70,7 @@ export default function TokenAllocationCalculator() {
         <p className="text-s text-center text-yellow-500 mt-2">
           FDV: ${fdv.toLocaleString(undefined)}
         </p>
-        <p className="text-xs text-white mt-4">by @__medico_</p>
+        <p className="text-xs text-white mt-6 text-center">by @__medico_</p>
       </div>
     </div>
   );
