@@ -1,79 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function Home() {
-  const [rank, setRank] = useState("");
-  const [payout, setPayout] = useState(null);
-  const calculatePayout = (e) => {
-    e.preventDefault();
-    if (!rank || rank < 1 || rank > 200) {
-      alert("Please enter a valid rank (1-200)");
-      return;
-    }
+export default function TokenAllocationCalculator() {
+  const [mindshare, setMindshare] = useState(0);
+  const [fdv, setFDV] = useState(50000000);
 
-    const totalPrize = 1_000_000;
-    const totalWeights = 20100;
-    const weight = 201 - parseInt(rank, 10);
-    const share = (weight / totalWeights) * totalPrize;
+  const totalSupply = 1_000_000_000;
+  const communityAllocationPercent = 0.325;
 
-    setPayout(share.toFixed(2));
-  };
+  const allocationTokens = (communityAllocationPercent / 100) * totalSupply;
+  const userTokens = (mindshare / 100) * allocationTokens;
+  const tokenPrice = fdv / totalSupply;
+  const userDollarValue = userTokens * tokenPrice;
+
   return (
-    <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 bg-indigo-100 font-[family-name:var(--font-geist-sans)]">
-      <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-4 text-center text-black">
-          UNION KAITO YAP LEADERBOARD CALCULATOR
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
+      {" "}
+      <div className="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700">
+        <h1 className="text-3xl font-extrabold mb-6 text-center text-blue-300">
+          Union Yapper Allocation Calculator
         </h1>
-        <form onSubmit={calculatePayout} className="space-y-4">
-          <div>
-            <label
-              htmlFor="rank"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Enter Your Rank (1-200)
-            </label>
-            <input
-              type="number"
-              id="rank"
-              min="1"
-              max="200"
-              value={rank}
-              onChange={(e) => setRank(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-black"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Calculate My Share
-          </button>
-        </form>
-
-        {payout !== null && (
-          <div className="mt-6 p-4 bg-indigo-50 rounded-md">
-            <h2 className="text-lg font-semibold text-indigo-800">
-              Your Estimated Payout:
-            </h2>
-            <p className="text-2xl font-bold text-[#00987e]">${payout}</p>
-            <p className="text-sm text-gray-600 mt-1">
-              Based on rank <span className="font-medium">{rank}</span> in the
-              UNION KAITO YAP LEADERBOARD.
-            </p>
-          </div>
-        )}
-
-        <div className="mt-6 text-xs text-gray-500">
-          <p>
-            Formula: <code>(201 - Your Rank) / 20,100 × $1,000,000</code>
+        <div className="mb-6">
+          <label className="block mb-2 font-medium text-sm">
+            Mindshare (%)
+          </label>
+          <input
+            type="number"
+            className="w-full p-3 rounded-xl bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={mindshare}
+            onChange={(e) => setMindshare(parseFloat(e.target.value) || 0)}
+            min="0"
+            max="100"
+            step="0.01"
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block mb-2 font-medium text-sm">FDV ($)</label>
+          <input
+            type="number"
+            className="w-full p-3 rounded-xl bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={fdv}
+            onChange={(e) => setFDV(parseFloat(e.target.value))}
+            min="0"
+            step="1000000"
+          />
+        </div>
+        <div className="mt-6 text-center">
+          <p className="text-lg mb-1">You receive:</p>
+          <p className="text-4xl font-bold text-green-400">
+            $
+            {userDollarValue.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </p>
+          <p className="text-lg mt-1 text-blue-300">
+            (~ {``} $U {``}
+            {userTokens.toLocaleString(undefined, {
+              maximumFractionDigits: 2,
+            })}
+            )
           </p>
         </div>
+        <p className="text-xs text-gray-400 mt-6 text-center">
+          Based on a {communityAllocationPercent}% community allocation from a
+          1B token supply.
+        </p>
+        <p className="text-s text-center text-yellow-500 mt-2">
+          FDV: ${fdv.toLocaleString(undefined)}
+        </p>
       </div>
-      <p className="w-full mt-40 italic font-bold text-indigo-700 text-center">
-        made by @__medico_
-      </p>
     </div>
   );
 }
